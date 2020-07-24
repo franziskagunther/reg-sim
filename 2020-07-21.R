@@ -10,7 +10,7 @@ data("clouds", package = "HSAUR3")
 # The original data set is relatively small. Achieving similar results for the linear regression with
 # the simulated and the original data seemed thus to be only possible with much simulated data.
 
-n <- 10000 # 24 simulated data points were not enough
+n <- 24 # 24 simulated data points were not enough
 
 # Prewetness = total rainfall in the target area one hour before seeding (in cubic metres times 1e+8)
 ols <- lm(rainfall ~ prewetness, data = clouds)
@@ -41,7 +41,7 @@ clouds_sim <- data.frame(prewetness = x, rainfall = y)
 # Here, we check if we have got approximately the same coefficients. 
 ols_sim <- lm(rainfall ~ prewetness, data = clouds_sim)
 
-coef_sim <- round(coef(ols), 3)
+coef_sim <- round(coef(ols_sim), 3)
 
 # Similarly, we check if we obtain approximately the same coefficients within a Bayesian analysis.
 
@@ -49,13 +49,18 @@ reglin_bayes <-
   stan_lm(
     rainfall ~ prewetness,
     data = clouds_sim,
-    prior = R2(location = 0.5, what="median"),
+    prior = NULL,
     seed = 12345
   )
 
 reglin_bayes
 
-# We find that the Bayesian model slightly overfits the simulated data.
+# We find that the Bayesian model slightly overfits the simulated data (log-fit_ratio, ln omega), the 
+# coefficients of the simulated data are quite close to the original ones, and the median absolute 
+# deviation is small. 
+
+
+
 
 
 
